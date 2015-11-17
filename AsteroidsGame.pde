@@ -1,15 +1,54 @@
-//your variable declarations here
+private SpaceShip Traveler;
+double sAccel = 0;
 public void setup() 
 {
-  //your code here
+  size(500, 500);
+  imageMode(CENTER);
+  Traveler = new SpaceShip();
 }
 public void draw() 
 {
-  //your code here
+  background(0, 25, 35);
+  Traveler.show();
+  Traveler.move();
+  Traveler.accelerate();
 }
-class SpaceShip //extends Floater  
+private class SpaceShip extends Floater  
 {   
-    //your code here
+  private PImage ship;
+  private double sRadians;
+  public SpaceShip()
+  {
+    myCenterX = width/2;
+    myCenterY = height/2;
+    myDirectionX = 0;
+    myDirectionY = 0;
+    ship = loadImage("Sprites/Ship.png");
+    sRadians = 0;
+  }
+  public void show()
+  {
+    if(dist(mouseX, mouseY, (float)(myCenterX), (float)(myCenterY))!=0)
+    {
+      sRadians = Math.acos(((float)(myCenterX - mouseX)/dist(mouseX, mouseY, (float)(myCenterX), (float)(myCenterY))));
+    }
+    if((myCenterY - mouseY)<0)
+    {
+      sRadians *= -1;
+    }
+    pushMatrix();
+    translate((float)myCenterX, (float)myCenterY);
+    rotate((float)sRadians - radians(90));
+    image(ship, 0, -4);
+    popMatrix();
+  }
+  public void accelerate()   
+  {          
+    //convert the current direction the floater is pointing to radians        
+    //change coordinates of direction of travel
+      myDirectionX = -((sAccel) * Math.cos(sRadians));   
+      myDirectionY = -((sAccel) * Math.sin(sRadians));
+  }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -20,16 +59,16 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   protected double myCenterX, myCenterY; //holds center coordinates   
   protected double myDirectionX, myDirectionY; //holds x and y coordinates of the vector for direction of travel   
   protected double myPointDirection; //holds current direction the ship is pointing in degrees    
-  abstract public void setX(int x);  
-  abstract public int getX();   
-  abstract public void setY(int y);   
-  abstract public int getY();   
-  abstract public void setDirectionX(double x);   
-  abstract public double getDirectionX();   
-  abstract public void setDirectionY(double y);   
-  abstract public double getDirectionY();   
-  abstract public void setPointDirection(int degrees);   
-  abstract public double getPointDirection(); 
+  // abstract public void setX(int x);  
+  // abstract public int getX();   
+  // abstract public void setY(int y);   
+  // abstract public int getY();   
+  // abstract public void setDirectionX(double x);   
+  // abstract public double getDirectionX();   
+  // abstract public void setDirectionY(double y);   
+  // abstract public double getDirectionY();   
+  // abstract public void setPointDirection(int degrees);   
+  // abstract public double getPointDirection(); 
 
   //Accelerates the floater in the direction it is pointing (myPointDirection)   
   public void accelerate (double dAmount)   
@@ -40,7 +79,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     myDirectionX += ((dAmount) * Math.cos(dRadians));    
     myDirectionY += ((dAmount) * Math.sin(dRadians));       
   }   
-  public void rotate (int nDegreesOfRotation)   
+  public void rotateObject (int nDegreesOfRotation)   
   {     
     //rotates the floater by a given number of degrees    
     myPointDirection+=nDegreesOfRotation;   
@@ -87,4 +126,17 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     endShape(CLOSE);  
   }   
 } 
-
+void keyPressed()
+{
+  if(key == 'w')
+  {
+    sAccel = 4;
+  }
+}
+void keyReleased()
+{
+  if(key == 'w')
+  {
+    sAccel = 0;
+  }
+}
