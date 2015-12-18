@@ -29,6 +29,7 @@ public void draw()
       if(dist(Rock.get(i).getX(), Rock.get(i).getY(), Ammo.get(e).getX(), Ammo.get(e).getY()) <= 30)
       {
         Rock.remove(i);
+        Ammo.remove(e);
         break;
       }
     }
